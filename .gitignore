@@ -1,20 +1,23 @@
-# Python
+# Python cache
 __pycache__/
 *.pyc
 
-# Virtual Environment
+# Virtual environment
 venv/
 
-# Environment files
+# Environment variables (IMPORTANT)
 .env
 .env.*
 
-# VS Code settings
+# VS Code
 .vscode/
 
-# Generated images
+# Generated files
 generated_image.png
 
-# Windows files
+# Windows
 Thumbs.db
-Desktop.ini
+
+# AI model files (optional, if you use ComfyUI later)
+*.safetensors
+*.ckpt
