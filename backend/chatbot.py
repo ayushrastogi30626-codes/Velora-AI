@@ -1,12 +1,25 @@
-import ollama
-import re
+import os
+from dotenv import load_dotenv
+import google.generativeai as genai
+
+# Load .env
+load_dotenv()
+
+api_key = os.getenv("GEMINI_API_KEY")
+
+if not api_key:
+    raise ValueError("GEMINI_API_KEY not found in .env file")
+
+genai.configure(api_key=api_key)
+
+# Gemini model
+model = genai.GenerativeModel("gemini-2.5-flash")
+
 
 # -------------------------
 # SYSTEM PROMPT
 # -------------------------
-SYSTEM_PROMPT = {
-    "role": "system",
-    "content": """
+SYSTEM_PROMPT = """
 You are a helpful AI assistant.
 
 Rules:
@@ -14,10 +27,10 @@ Rules:
 - Keep responses concise unless more detail is requested.
 - If the user starts with 'calculate', solve the expression.
 """
-}
+
 
 # -------------------------
-# CALCULATOR
+# Calculator
 # -------------------------
 def calculator_tool(expression):
     try:
@@ -39,14 +52,13 @@ def stream_ai_response(messages):
         yield f"🧮 Result: {calculator_tool(expression)}"
         return
 
-    # Normal AI Chat
-    messages = [SYSTEM_PROMPT] + messages
+    # Build conversation
+    conversation = SYSTEM_PROMPT + "\n\n"
 
-    stream = ollama.chat(
-        model="phi3",
-        messages=messages,
-        stream=True
-    )
+    for msg in messages:
+        conversation += f"{msg['role']}: {msg['content']}\n"
 
-    for chunk in stream:
-        yield chunk["message"]["content"]
+    # Gemini Response
+    response = model.generate_content(conversation)
+
+    yield response.text
