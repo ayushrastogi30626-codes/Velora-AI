@@ -5,19 +5,15 @@ __pycache__/
 # Virtual environment
 venv/
 
-# Environment variables (IMPORTANT)
+# Environment variables 
 .env
 .env.*
 
 # VS Code
 .vscode/
 
-# Generated files
-generated_image.png
+
 
 # Windows
 Thumbs.db
 
-# AI model files (optional, if you use ComfyUI later)
-*.safetensors
-*.ckpt
