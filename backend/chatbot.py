@@ -53,11 +53,12 @@ def stream_ai_response(messages):
         return
 
     # Build conversation
-    conversation = SYSTEM_PROMPT + "\n\n"
+    conversation = SYSTEM_PROMPT + "\n\nConversation:\n"
 
     for msg in messages:
-        conversation += f"{msg['role']}: {msg['content']}\n"
+        conversation += f"{msg['role'].capitalize()}: {msg['content']}\n"
 
+    conversation += "\nAssistant:"
     # Gemini Response
     response = model.generate_content(conversation)
 
