@@ -21,8 +21,14 @@ class PDFVectorStore:
         self.index.add(np.array(embeddings))
 
     def search(self, query, k=3):
+
+        print("Chunks stored:", len(self.chunks))
+        print("Index:", self.index)
+
         query_vector = model.encode([query])
 
         distances, indices = self.index.search(np.array(query_vector), k)
+
+        print("Indices:", indices)
 
         return [self.chunks[i] for i in indices[0]]

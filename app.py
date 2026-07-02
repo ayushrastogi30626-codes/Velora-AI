@@ -1,3 +1,25 @@
+
+import streamlit as st
+
+st.set_page_config(
+    page_title="AI Assistant",
+    page_icon="🤖",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
+
+from backend.chatbot import stream_ai_response
+from backend.pdf_reader import extract_text_from_pdf
+from backend.pdf_vector import PDFVectorStore
+from backend.pdf_chunker import split_text
+from backend.agent import run_agent
+
+st.set_page_config(
+    page_title="AI Assistant",
+    page_icon="🤖",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
 import streamlit as st
 from backend.chatbot import stream_ai_response
 from backend.pdf_reader import extract_text_from_pdf
@@ -36,16 +58,22 @@ if "vector_store" not in st.session_state:
 # -----------------------------
 # UI TITLE
 # -----------------------------
-st.title("🤖 My AI Assistant")
+st.title("🤖 Velora AI")
 
 
 # -----------------------------
 # PDF UPLOAD
 # -----------------------------
-uploaded_pdf = st.file_uploader(
-    "📄 Upload PDF",
-    type=["pdf"]
-)
+with st.sidebar:
+    st.header("📄 PDF Tools")
+
+    uploaded_pdf = st.file_uploader(
+        "Upload PDF",
+        type=["pdf"]
+    )
+
+    summarize = st.button("🧠 Summarize PDF")
+
 
 if uploaded_pdf is not None:
 
@@ -54,6 +82,9 @@ if uploaded_pdf is not None:
     chunks = split_text(text)
 
     st.session_state.vector_store.build_index(chunks)
+    st.write("Text length:", len(text))
+    st.write("Chunks:", len(chunks))
+    st.write("Vector Index:", st.session_state.vector_store.index)
 
     st.session_state.pdf_text = text
 
@@ -71,7 +102,7 @@ if uploaded_pdf is not None:
                 "role": "user",
                 "content": pdf_question
             }
-        )
+        ) 
 
         answer = run_agent(
             pdf_question,
@@ -94,6 +125,9 @@ if uploaded_pdf is not None:
 # -----------------------------
 # SUMMARIZE PDF
 # -----------------------------
+# -----------------------------
+# SUMMARIZE PDF
+# -----------------------------
 if st.button("🧠 Summarize PDF"):
 
     if st.session_state.pdf_text == "":
@@ -102,9 +136,10 @@ if st.button("🧠 Summarize PDF"):
     else:
 
         prompt = f"""
-Summarize this document in simple bullet points:
+Please summarize the following PDF in simple bullet points.
 
-{st.session_state.pdf_text[:3000]}
+PDF Content:
+{st.session_state.pdf_text}
 """
 
         with st.chat_message("assistant"):
@@ -169,10 +204,8 @@ if prompt:
         # Only keep last 10 messages
         messages = st.session_state.messages[-10:]
 
-        for chunk in stream_ai_response(
-            messages,
-            st.session_state.pdf_text
-        ):
+        for chunk in stream_ai_response(messages):
+     
 
             full_response += chunk
             placeholder.markdown(full_response)

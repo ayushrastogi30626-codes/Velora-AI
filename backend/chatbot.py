@@ -2,27 +2,22 @@ import ollama
 import re
 
 # -------------------------
-# SYSTEM BRAIN
+# SYSTEM PROMPT
 # -------------------------
 SYSTEM_PROMPT = {
     "role": "system",
     "content": """
-You are an AI Agent.
-
-You can:
-1. Answer normally
-2. Use tools when needed
+You are a helpful AI assistant.
 
 Rules:
-- If math is asked → use calculator tool
-- If PDF question → use context
-- Otherwise answer normally
-- Be short and clear
+- Answer clearly.
+- Keep responses concise unless more detail is requested.
+- If the user starts with 'calculate', solve the expression.
 """
 }
 
 # -------------------------
-# TOOL 1: CALCULATOR
+# CALCULATOR
 # -------------------------
 def calculator_tool(expression):
     try:
@@ -30,52 +25,27 @@ def calculator_tool(expression):
     except:
         return "Invalid expression"
 
-# -------------------------
-# TOOL 2: PDF SEARCH (simple version)
-# -------------------------
-def search_pdf(question, pdf_text):
-    if not pdf_text:
-        return "No PDF uploaded"
-
-    return pdf_text[:1500]  # simple version for now
 
 # -------------------------
-# AGENT CORE
+# AI RESPONSE
 # -------------------------
-def stream_ai_response(messages, pdf_text=""):
+def stream_ai_response(messages):
 
     last_message = messages[-1]["content"].lower()
 
-    # -------------------------
-    # TOOL DECISION: CALCULATOR
-    # -------------------------
-    if "calculate" in last_message:
-        expression = re.sub(r"calculate", "", last_message)
-        result = calculator_tool(expression)
-        yield f"🧮 Result: {result}"
+    # Calculator
+    if last_message.startswith("calculate"):
+        expression = last_message.replace("calculate", "").strip()
+        yield f"🧮 Result: {calculator_tool(expression)}"
         return
 
-    # -------------------------
-    # TOOL DECISION: PDF
-    # -------------------------
-    if "pdf" in last_message or "document" in last_message:
-        result = search_pdf(last_message, pdf_text)
-        yield f"📄 From PDF:\n{result}"
-        return
-
-    # -------------------------
-    # NORMAL AI RESPONSE
-    # -------------------------
-    messages = [SYSTEM_PROMPT] + messages[-10:]
+    # Normal AI Chat
+    messages = [SYSTEM_PROMPT] + messages
 
     stream = ollama.chat(
         model="phi3",
         messages=messages,
-        stream=True,
-        options={
-            "temperature": 0.7,
-            "top_p": 0.9
-        }
+        stream=True
     )
 
     for chunk in stream:
