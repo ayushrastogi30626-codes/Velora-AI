@@ -43,15 +43,15 @@ Velora-AI/
 ├── .gitignore
 │
 ├── backend/
+    |---agent.py
 │   ├── chatbot.py
 │   ├── agent.py
-│   ├── pdf_reader.py
 │   ├── pdf_chunker.py
+│   ├── pdf_reader.py
 │   ├── pdf_vector.py
 │   └── tools.py
 │
-└── .streamlit/
-    └── config.toml
+
 ```
 
 ---
@@ -67,7 +67,7 @@ git clone https://github.com/ayushrastogi30626-codes/Velora-AI.git
 ### 2. Move into the project
 
 ```bash
-cd YOUR_REPOSITORY
+cd Velora-AI
 ```
 
 ### 3. Create a virtual environment
