@@ -116,8 +116,6 @@ with st.sidebar:
 
     st.title("⚙️ Velora")
 
-    st.success("AI Assistant Ready")
-
     uploaded_pdf=st.file_uploader(
         "📄 Upload PDF",
         type=["pdf"]
