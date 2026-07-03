@@ -102,7 +102,7 @@ if "vector_store" not in st.session_state:
 
 st.title("🤖 Velora AI")
 
-st.caption("🚀 AI Assistant powered by Gemini")
+
 
 
 st.divider()
