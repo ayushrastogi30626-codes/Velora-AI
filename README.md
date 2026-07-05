@@ -96,16 +96,7 @@ pip install -r requirements.txt
 
 ---
 
-## 🔑 Environment Variables
 
-Create a `.env` file in the project root.
-
-```env
-GEMINI_API_KEY=YOUR_GEMINI_API_KEY
-TAVILY_API_KEY=YOUR_TAVILY_API_KEY
-```
-
----
 
 ## ▶️ Run the Application
 
