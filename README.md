@@ -116,18 +116,6 @@ streamlit run app.py
 
 ---
 
-## 📸 Screenshots
-
-Add screenshots of your application here.
-
-Example:
-
-- Home Screen
-- PDF Upload
-- PDF Summary
-- Chat Interface
-
----
 
 ## 🎯 Future Enhancements
 
