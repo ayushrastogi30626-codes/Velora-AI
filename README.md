@@ -13,7 +13,6 @@ Velora AI allows users to chat with an AI assistant, upload PDF documents, gener
 - 🧠 Generate concise PDF summaries
 - ❓ Ask questions from uploaded PDFs
 - 🔍 Semantic search using FAISS and Sentence Transformers
-- ⚡ Powered by Google Gemini API
 - 🎨 Clean and modern Streamlit interface
 
 ---
@@ -24,7 +23,6 @@ Velora AI allows users to chat with an AI assistant, upload PDF documents, gener
 |------------|---------|
 | Python | Backend |
 | Streamlit | User Interface |
-| Google Gemini API | AI Model |
 | FAISS | Vector Database |
 | Sentence Transformers | Text Embeddings |
 | PyPDF | PDF Text Extraction |
