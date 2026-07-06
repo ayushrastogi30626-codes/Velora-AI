@@ -1,6 +1,7 @@
 import os
 from dotenv import load_dotenv
 import google.generativeai as genai
+from google.api_core.exceptions import ResourceExhausted
 
 # Load .env
 load_dotenv()
@@ -42,6 +43,12 @@ def calculator_tool(expression):
 # -------------------------
 # AI RESPONSE
 # -------------------------
+# -------------------------
+# AI RESPONSE
+# -------------------------
+from google.api_core.exceptions import ResourceExhausted
+
+
 def stream_ai_response(messages):
 
     last_message = messages[-1]["content"].lower()
@@ -59,7 +66,34 @@ def stream_ai_response(messages):
         conversation += f"{msg['role'].capitalize()}: {msg['content']}\n"
 
     conversation += "\nAssistant:"
-    # Gemini Response
-    response = model.generate_content(conversation)
 
-    yield response.text
+    try:
+        # Generate AI response
+        response = model.generate_content(conversation)
+
+        if response.text:
+            yield response.text
+        else:
+            yield "⚠️ No response was generated. Please try again."
+
+    except ResourceExhausted:
+        yield """
+# ⚠️ AI Usage Limit Reached
+
+Sorry! Velora AI has reached its current free usage limit.
+
+### Please try one of the following:
+- ⏳ Wait a few minutes and try again.
+- 🌅 If the daily quota has been exhausted, please come back tomorrow.
+
+Thank you for using **Velora AI** ❤️
+"""
+
+    except Exception:
+        yield """
+# ⚠️ Something Went Wrong
+
+Velora AI couldn't process your request right now.
+
+Please try again in a few moments.
+"""
